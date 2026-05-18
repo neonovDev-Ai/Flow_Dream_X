@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Flow Dream X • Music Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-deep: #0a0a14;
+            --bg-surface: #0d0e18;
+            --bg-elevated: #13152a;
+            --glass-bg: rgba(18, 20, 35, 0.75);
+            --glass-stroke: rgba(168, 85, 247, 0.3);
+            --purple-primary: #a855f7;
+            --purple-glow: #c084fc;
+            --teal-mystic: #2dd4bf;
+            --text-light: #f3f0ff;
+            --text-secondary: #c4c1d6;
+            --text-dim: #8b86a3;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0a0a14 0%, #130b1e 50%, #0a0a14 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .orb-1 { width: 300px; height: 300px; background: #a855f7; top: -100px; left: -100px; animation: floatOrb 20s infinite; }
+        .orb-2 { width: 400px; height: 400px; background: #2dd4bf; bottom: -150px; right: -150px; animation: floatOrb 25s infinite reverse; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        .dashboard-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            background: var(--bg-surface);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-stroke);
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-wrapper {
+                height: 90vh;
+                border-radius: 48px;
+                margin: 20px auto;
+            }
+        }
+
+        .main-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .main-scroll::-webkit-scrollbar-track {
+            background: rgba(168,85,247,0.1);
+            border-radius: 10px;
+        }
+        .main-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #a855f7, #2dd4bf);
+            border-radius: 10px;
+        }
+
+        .header {
+            padding: 16px 20px;
+            background: rgba(13, 14, 24, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-stroke);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(168,85,247,0.2);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            color: var(--purple-glow);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .back-btn:active { transform: scale(0.95); }
+
+        .header-title {
+            flex: 1;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-elevated);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-stroke);
+            color: var(--purple-glow);
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+        }
+        .icon-btn:active { transform: scale(0.94); }
+
+        .main-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px 90px;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(30, 30, 45, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid var(--glass-stroke);
+            margin-bottom: 20px;
+        }
+
+        /* Search Input */
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .search-input {
+            flex: 1;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-stroke);
+            border-radius: 30px;
+            padding: 14px 18px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--purple-primary);
+        }
+        .search-btn {
+            width: 50px;
+            background: linear-gradient(135deg, var(--purple-primary), var(--teal-mystic));
+            border: none;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+        }
+        .search-btn:active { transform: scale(0.95); }
+
+        /* Song List */
+        .song-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .song-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-stroke);
+            border-radius: 20px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .song-item.active {
+            border-color: var(--teal-mystic);
+            background: rgba(45,212,191,0.1);
+        }
+        .song-item:active { transform: scale(0.98); }
+        .song-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        .song-info {
+            flex: 1;
+        }
+        .song-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .song-artist {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+        .play-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(168,85,247,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--teal-mystic);
+        }
+
+        /* Mini Player */
+        .mini-player {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(120px);
+            width: calc(100% - 40px);
+            max-width: 460px;
+            background: linear-gradient(135deg, #1a1a2e, #0a0a14);
+            border: 1px solid var(--purple-primary);
+            border-radius: 60px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .mini-player.active {
+            transform: translateX(-50%) translateY(0);
+        }
+        .mp-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--teal-mystic);
+        }
+        .mp-info {
+            flex: 1;
+        }
+        .mp-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        .mp-artist {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+        }
+        .mp-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .mp-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .mp-btn-main {
+            color: var(--teal-mystic);
+            font-size: 1.4rem;
+        }
+        .mp-btn:active { transform: scale(0.95); }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            flex-shrink: 0;
+            background: rgba(13, 14, 24, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-stroke);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 12px;
+            z-index: 30;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            border-radius: 30px;
+            transition: all 0.2s;
+            cursor: pointer;
+            color: var(--text-dim);
+            background: transparent;
+            border: none;
+            font-family: inherit;
+        }
+        .nav-item i { font-size: 1.1rem; }
+        .nav-item span { font-size: 0.55rem; font-weight: 500; }
+        .nav-item.active {
+            background: rgba(168,85,247,0.2);
+            color: var(--purple-glow);
+        }
+        .nav-item:active { transform: scale(0.95); }
+
+        .status-msg {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-dim);
+        }
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+        }
+        .loading-spinner i {
+            font-size: 2rem;
+            color: var(--purple-primary);
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(10,10,20,0.95);
+            border: 1px solid var(--teal-mystic);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 150;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="dashboard-wrapper">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-title"><i class="fas fa-music"></i> Music Player</div>
+            <div class="header-actions">
+                <div class="icon-btn" id="menuToggleBtn"><i class="fas fa-bars-staggered"></i></div>
+            </div>
+        </div>
+
+        <div class="main-scroll">
+            <div class="glass-card">
+                <div class="input-group">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Cari lagu atau artis...">
+                    <button class="search-btn" onclick="searchMusic()"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <div id="loadingState" class="loading-spinner" style="display: none;">
+                <i class="fas fa-spinner"></i>
+                <p style="margin-top: 10px; color: var(--text-dim);">Mencari lagu...</p>
+            </div>
+
+            <div class="song-list" id="songList">
+                <div class="status-msg"><i class="fas fa-search"></i><p>Cari lagu favorit Anda</p></div>
+            </div>
+        </div>
+
+        <!-- Mini Player -->
+        <div class="mini-player" id="miniPlayer">
+            <img class="mp-img" id="mpImg" src="https://via.placeholder.com/45" alt="Cover">
+            <div class="mp-info">
+                <div class="mp-title" id="mpTitle">Pilih Lagu</div>
+                <div class="mp-artist" id="mpArtist">-</div>
+            </div>
+            <div class="mp-controls">
+                <button class="mp-btn" onclick="togglePlay()"><i class="fas fa-play" id="playPauseIcon"></i></button>
+                <a href="#" class="mp-btn" id="downloadLink" download style="text-decoration: none;"><i class="fas fa-download"></i></a>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <button class="nav-item" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item" data-page="store"><i class="fas fa-store"></i><span>Store</span></button>
+            <button class="nav-item" data-page="create"><i class="fas fa-magic"></i><span>Create</span></button>
+            <button class="nav-item" data-page="other"><i class="fas fa-clock"></i><span>Other</span></button>
+            <button class="nav-item active" data-page="music"><i class="fas fa-music"></i><span>Music</span></button>
+            <button class="nav-item" data-page="tiktok"><i class="fab fa-tiktok"></i><span>TikTok</span></button>
+            <button class="nav-item" data-page="suntik"><i class="fas fa-syringe"></i><span>Suntik</span></button>
+            <button class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+        </div>
+    </div>
+
+    <div class="toast" id="toastMsg">Pesan</div>
+
+    <script>
+        const session = JSON.parse(localStorage.getItem('flowdream_session'));
+        if(!session) window.location.href = 'index.html';
+
+        let currentSong = null;
+        const audio = new Audio();
+        const miniPlayer = document.getElementById('miniPlayer');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        async function searchMusic() {
+            const query = document.getElementById('searchInput').value.trim();
+            const songList = document.getElementById('songList');
+            const loadingState = document.getElementById('loadingState');
+
+            if(!query) { showToast('Masukkan nama lagu atau artis!'); return; }
+
+            loadingState.style.display = 'block';
+            songList.innerHTML = '';
+
+            try {
+                const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=20`);
+                const data = await response.json();
+                loadingState.style.display = 'none';
+
+                if(data.resultCount === 0) {
+                    songList.innerHTML = '<div class="status-msg">Tidak ada hasil ditemukan</div>';
+                    return;
+                }
+
+                songList.innerHTML = '';
+                data.results.forEach((song, index) => {
+                    const songItem = document.createElement('div');
+                    songItem.className = 'song-item';
+                    songItem.innerHTML = `
+                        <img src="${song.artworkUrl100?.replace('100x100', '200x200') || 'https://via.placeholder.com/50'}" class="song-img">
+                        <div class="song-info">
+                            <div class="song-title">${song.trackName || 'Unknown'}</div>
+                            <div class="song-artist">${song.artistName || 'Unknown'}</div>
+                        </div>
+                        <div class="play-icon"><i class="fas fa-play"></i></div>
+                    `;
+                    songItem.onclick = () => playSong(song);
+                    songList.appendChild(songItem);
+                });
+            } catch(error) {
+                loadingState.style.display = 'none';
+                songList.innerHTML = '<div class="status-msg">Error koneksi, coba lagi</div>';
+                showToast('Gagal mencari lagu');
+            }
+        }
+
+        function playSong(song) {
+            currentSong = song;
+            const previewUrl = song.previewUrl;
+            if(!previewUrl) { showToast('Preview tidak tersedia'); return; }
+
+            audio.src = previewUrl;
+            audio.play().catch(e => console.log('Auto-play prevented'));
+
+            document.getElementById('mpTitle').innerText = song.trackName || 'Unknown';
+            document.getElementById('mpArtist').innerText = song.artistName || 'Unknown';
+            document.getElementById('mpImg').src = song.artworkUrl100?.replace('100x100', '200x200') || 'https://via.placeholder.com/45';
+            document.getElementById('downloadLink').href = previewUrl;
+
+            miniPlayer.classList.add('active');
+            playPauseIcon.className = 'fas fa-pause';
+
+            document.querySelectorAll('.song-item').forEach(item => item.classList.remove('active'));
+            if(event?.target?.closest('.song-item')) event.target.closest('.song-item').classList.add('active');
+        }
+
+        function togglePlay() {
+            if(audio.paused) {
+                audio.play();
+                playPauseIcon.className = 'fas fa-pause';
+            } else {
+                audio.pause();
+                playPauseIcon.className = 'fas fa-play';
+            }
+        }
+
+        audio.onended = () => { playPauseIcon.className = 'fas fa-play'; };
+        document.getElementById('searchInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') searchMusic(); });
+
+        function goBack() { window.location.href = 'home.html'; }
+
+        const pageMap = {
+            'home': 'home.html', 'store': 'store.html', 'create': 'create.html',
+            'music': 'music.html', 'tiktok': 'tiktok.html', 'suntik': 'suntik.html', 'profile': 'profile.html'
+        };
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.getAttribute('data-page');
+                if(page === 'other') { showToast('Coming Soon!'); return; }
+                if(pageMap[page]) window.location.href = pageMap[page];
+            });
+        });
+
+        // Sidebar injection
+        const sidebarHTML = `
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+            <aside class="sidebar" id="sidebarPanel">
+                <div class="sidebar-banner"><video autoplay muted loop playsinline><source src="banner.mp4" type="video/mp4"></video><div class="sidebar-logo"><i class="fas fa-dragon"></i></div></div>
+                <div class="sidebar-menu">
+                    <div class="sidebar-item" data-side="reseller"><i class="fas fa-chart-line"></i> Reseller Page</div>
+                    <div class="sidebar-item" data-side="dev"><i class="fas fa-code"></i> Dev Page</div>
+                </div>
+                <div style="padding: 16px; font-size:0.6rem; color:var(--text-dim); border-top:1px solid var(--glass-stroke);"><i class="fas fa-crown"></i> Flow Dream X v3.0</div>
+            </aside>
+            <style>
+                .sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 90; opacity: 0; visibility: hidden; transition: 0.3s; }
+                .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: linear-gradient(135deg, var(--bg-surface), #0a0a14); border-right: 2px solid var(--purple-primary); z-index: 100; transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+                .sidebar.open { left: 0; }
+                .sidebar-banner { height: 140px; position: relative; overflow: hidden; }
+                .sidebar-banner video { width: 100%; height: 100%; object-fit: cover; }
+                .sidebar-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: linear-gradient(135deg, #a855f7, #2dd4bf); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+                .sidebar-logo i { font-size: 1.8rem; color: white; }
+                .sidebar-menu { padding: 20px; flex: 1; }
+                .sidebar-item { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 20px; color: var(--text-secondary); text-decoration: none; margin: 8px 0; transition: all 0.3s; cursor: pointer; }
+                .sidebar-item:hover { background: rgba(168,85,247,0.2); color: var(--purple-glow); transform: translateX(6px); }
+                .sidebar-item i { width: 24px; }
+            </style>
+        `;
+        document.body.insertAdjacentHTML('beforeend', sidebarHTML);
+
+        const sidebarPanel = document.getElementById('sidebarPanel');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+
+        function closeSidebar() {
+            if(sidebarPanel) sidebarPanel.classList.remove('open');
+            if(sidebarOverlay) { sidebarOverlay.style.opacity = '0'; sidebarOverlay.style.visibility = 'hidden'; }
+        }
+        function openSidebar() {
+            if(sidebarPanel) sidebarPanel.classList.add('open');
+            if(sidebarOverlay) { sidebarOverlay.style.opacity = '1'; sidebarOverlay.style.visibility = 'visible'; }
+        }
+        if(menuToggleBtn) menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); openSidebar(); });
+        if(sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const side = item.getAttribute('data-side');
+                if(side === 'reseller') window.location.href = 'ress.html';
+                if(side === 'dev') window.location.href = 'dev.html';
+                closeSidebar();
+            });
+        });
+        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeSidebar(); });
+    </script>
+</body>
+</html>

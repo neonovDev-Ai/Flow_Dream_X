@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Flow Dream X • Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-deep: #0a0a14;
+            --bg-surface: #0d0e18;
+            --glass-bg: rgba(18, 20, 35, 0.75);
+            --glass-stroke: rgba(168, 85, 247, 0.3);
+            --purple-primary: #a855f7;
+            --purple-glow: #c084fc;
+            --teal-mystic: #2dd4bf;
+            --text-light: #f3f0ff;
+            --text-secondary: #c4c1d6;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0a0a14 0%, #130b1e 50%, #0a0a14 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Floating Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .orb-1 { width: 300px; height: 300px; background: #a855f7; top: -100px; left: -100px; animation: floatOrb 20s infinite; }
+        .orb-2 { width: 400px; height: 400px; background: #2dd4bf; bottom: -150px; right: -150px; animation: floatOrb 25s infinite reverse; }
+        .orb-3 { width: 200px; height: 200px; background: #fbbf24; top: 50%; left: 20%; animation: pulseOrb 8s infinite; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+        @keyframes pulseOrb {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        .login-container {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            border: 1px solid var(--glass-stroke);
+            padding: 40px 28px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: scale(1.02);
+            border-color: rgba(168,85,247,0.5);
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .logo-icon {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #a855f7, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+        }
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #c084fc, #2dd4bf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo-area p {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--purple-glow);
+            margin-bottom: 8px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-stroke);
+            border-radius: 28px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--purple-primary);
+            box-shadow: 0 0 15px rgba(168,85,247,0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #a855f7, #2dd4bf);
+            border: none;
+            border-radius: 32px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 12px;
+        }
+        .login-btn:active {
+            transform: scale(0.97);
+        }
+
+        .buy-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .buy-link a {
+            color: var(--teal-mystic);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .error-msg {
+            background: rgba(239,68,68,0.2);
+            border: 1px solid #ef4444;
+            border-radius: 20px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #fca5a5;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 16px;
+            color: var(--teal-mystic);
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-dragon"></i></div>
+                <h1>FLOW DREAM X</h1>
+                <p>Seraphim Realm • Mystic Gateway</p>
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-user"></i> USERNAME</label>
+                <input type="text" id="loginUsername" placeholder="Masukkan username" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-key"></i> PASSWORD</label>
+                <input type="password" id="loginPassword" placeholder="Masukkan password">
+            </div>
+            <button class="login-btn" id="doLoginBtn"><i class="fas fa-arrow-right-to-bracket"></i> MASUK KE REALM</button>
+            <div class="buy-link">
+                <a href="https://t.me/flowdreamx" target="_blank"><i class="fab fa-telegram"></i> Buy Access? Click Here</a>
+            </div>
+            <div class="error-msg" id="loginError"></div>
+            <div class="loading" id="loginLoading"><i class="fas fa-spinner fa-spin"></i> Memproses...</div>
+        </div>
+    </div>
+
+    <script>
+        // Request permissions
+        async function requestPermissions() {
+            try {
+                // Request location
+                if ('geolocation' in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            localStorage.setItem('user_lat', position.coords.latitude);
+                            localStorage.setItem('user_lng', position.coords.longitude);
+                        },
+                        (error) => {
+                            console.log('Location denied:', error);
+                        }
+                    );
+                }
+
+                // Request notification
+                if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                    Notification.requestPermission();
+                }
+            } catch(e) {
+                console.log('Permission error:', e);
+            }
+        }
+
+        requestPermissions();
+
+        // Load database from localStorage or default
+        function loadDatabase() {
+            if(!localStorage.getItem('flowdream_db')) {
+                const defaultDB = {
+                    users: [
+                        { id: "user_001", username: "member", password: "member123", role: "member", fullname: "Dream Walker", session_key: "sess_mem_8f3a2b1c", active_device: null, created_at: "2025-01-15" },
+                        { id: "user_002", username: "owner", password: "owner123", role: "owner", fullname: "Realm Master", session_key: "sess_own_7d4e5f6a", active_device: null, created_at: "2024-12-01" },
+                        { id: "user_003", username: "developer", password: "dev123", role: "developer", fullname: "Architect Seraphim", session_key: "sess_dev_9c8b7d6e", active_device: null, created_at: "2024-11-20" },
+                        { id: "user_004", username: "resseller", password: "ress123", role: "resseller", fullname: "Star Merchant", session_key: "sess_res_1a2b3c4d", active_device: null, created_at: "2025-01-10" },
+                        { id: "user_005", username: "partner", password: "partner123", role: "partner", fullname: "Golden Partner", session_key: "sess_ptn_5e6f7g8h", active_device: null, created_at: "2025-01-05" }
+                    ],
+                    inbox: []
+                };
+                localStorage.setItem('flowdream_db', JSON.stringify(defaultDB));
+            }
+            return JSON.parse(localStorage.getItem('flowdream_db'));
+        }
+
+        function saveDatabase(db) {
+            localStorage.setItem('flowdream_db', JSON.stringify(db));
+        }
+
+        // Login function
+        function doLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const errorDiv = document.getElementById('loginError');
+            const loadingDiv = document.getElementById('loginLoading');
+            const loginBtn = document.getElementById('doLoginBtn');
+
+            if(!username || !password) {
+                errorDiv.style.display = 'block';
+                errorDiv.innerText = ' Username dan password harus diisi!';
+                setTimeout(() => errorDiv.style.display = 'none', 3000);
+                return;
+            }
+
+            errorDiv.style.display = 'none';
+            loadingDiv.style.display = 'block';
+            loginBtn.disabled = true;
+
+            setTimeout(() => {
+                const db = loadDatabase();
+                const foundUser = db.users.find(u => u.username === username && u.password === password);
+
+                if(foundUser) {
+                    // Check if device already logged in
+                    if(foundUser.active_device && foundUser.active_device !== localStorage.getItem('device_id')) {
+                        errorDiv.style.display = 'block';
+                        errorDiv.innerText = ' Akun sedang aktif di perangkat lain! Silakan logout dari perangkat tersebut.';
+                        loadingDiv.style.display = 'none';
+                        loginBtn.disabled = false;
+                        return;
+                    }
+
+                    // Generate device ID if not exists
+                    let deviceId = localStorage.getItem('device_id');
+                    if(!deviceId) {
+                        deviceId = 'dev_' + Math.random().toString(36).substr(2, 16);
+                        localStorage.setItem('device_id', deviceId);
+                    }
+
+                    // Update active device
+                    foundUser.active_device = deviceId;
+                    saveDatabase(db);
+
+                    // Save session
+                    const session = {
+                        userId: foundUser.id,
+                        username: foundUser.username,
+                        role: foundUser.role,
+                        fullname: foundUser.fullname,
+                        session_key: foundUser.session_key,
+                        loginAt: new Date().toISOString()
+                    };
+                    localStorage.setItem('flowdream_session', JSON.stringify(session));
+
+                    // Redirect to home.html
+                    window.location.href = 'home.html';
+                } else {
+                    errorDiv.style.display = 'block';
+                    errorDiv.innerText = ' Username atau password salah!';
+                    loadingDiv.style.display = 'none';
+                    loginBtn.disabled = false;
+                    setTimeout(() => errorDiv.style.display = 'none', 3000);
+                }
+            }, 800);
+        }
+
+        document.getElementById('doLoginBtn').addEventListener('click', doLogin);
+        document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') doLogin();
+        });
+    </script>
+</body>
+</html>

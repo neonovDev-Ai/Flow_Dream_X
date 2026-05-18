@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Flow Dream X • Create SC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-deep: #0a0a14;
+            --bg-surface: #0d0e18;
+            --bg-elevated: #13152a;
+            --glass-bg: rgba(18, 20, 35, 0.75);
+            --glass-stroke: rgba(168, 85, 247, 0.3);
+            --purple-primary: #a855f7;
+            --purple-glow: #c084fc;
+            --teal-mystic: #2dd4bf;
+            --text-light: #f3f0ff;
+            --text-secondary: #c4c1d6;
+            --text-dim: #8b86a3;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0a0a14 0%, #130b1e 50%, #0a0a14 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .orb-1 { width: 300px; height: 300px; background: #a855f7; top: -100px; left: -100px; animation: floatOrb 20s infinite; }
+        .orb-2 { width: 400px; height: 400px; background: #2dd4bf; bottom: -150px; right: -150px; animation: floatOrb 25s infinite reverse; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        .dashboard-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            background: var(--bg-surface);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-stroke);
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-wrapper {
+                height: 90vh;
+                border-radius: 48px;
+                margin: 20px auto;
+            }
+        }
+
+        .main-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .main-scroll::-webkit-scrollbar-track {
+            background: rgba(168,85,247,0.1);
+            border-radius: 10px;
+        }
+        .main-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #a855f7, #2dd4bf);
+            border-radius: 10px;
+        }
+
+        .header {
+            padding: 16px 20px;
+            background: rgba(13, 14, 24, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-stroke);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(168,85,247,0.2);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            color: var(--purple-glow);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .back-btn:active { transform: scale(0.95); }
+
+        .header-title {
+            flex: 1;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-elevated);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-stroke);
+            color: var(--purple-glow);
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+        }
+        .icon-btn:active { transform: scale(0.94); }
+
+        .main-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px 90px;
+        }
+
+        /* Info Card */
+        .info-card {
+            background: rgba(30, 30, 45, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 16px;
+            border: 1px solid var(--glass-stroke);
+            margin-bottom: 20px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-stroke);
+        }
+        .info-row:last-child { border-bottom: none; }
+        .limit-badge {
+            background: rgba(45,212,191,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: var(--teal-mystic);
+        }
+
+        /* Input Group */
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--purple-glow);
+            margin-bottom: 6px;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-stroke);
+            border-radius: 20px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: var(--purple-primary);
+        }
+
+        /* Features */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 16px 0 12px;
+        }
+        .section-header h4 {
+            font-size: 0.9rem;
+            color: var(--purple-glow);
+        }
+        .features-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px 0;
+            scroll-snap-type: x mandatory;
+        }
+        .features-wrapper {
+            display: inline-flex;
+            gap: 12px;
+            padding: 4px;
+        }
+        .feature-card {
+            display: inline-block;
+            width: 180px;
+            background: rgba(30, 30, 45, 0.6);
+            border: 1px solid var(--glass-stroke);
+            border-radius: 20px;
+            padding: 12px;
+            white-space: normal;
+            scroll-snap-align: start;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .feature-card.selected {
+            border-color: var(--teal-mystic);
+            background: rgba(45,212,191,0.1);
+        }
+        .feature-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .feature-type {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-top: 6px;
+            display: inline-block;
+        }
+        .feature-type.biasa { background: rgba(96,165,250,0.2); color: #60a5fa; }
+        .feature-type.vip { background: rgba(251,191,36,0.2); color: #fbbf24; }
+        .feature-desc {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        .selected-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .selected-tag {
+            background: rgba(168,85,247,0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .remove-feature {
+            cursor: pointer;
+            color: #f87171;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--purple-primary), var(--teal-mystic));
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-secondary {
+            background: rgba(168,85,247,0.2);
+            border: 1px solid var(--purple-primary);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            flex-shrink: 0;
+            background: rgba(13, 14, 24, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-stroke);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 12px;
+            z-index: 30;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            border-radius: 30px;
+            transition: all 0.2s;
+            cursor: pointer;
+            color: var(--text-dim);
+            background: transparent;
+            border: none;
+            font-family: inherit;
+        }
+        .nav-item i { font-size: 1.1rem; }
+        .nav-item span { font-size: 0.55rem; font-weight: 500; }
+        .nav-item.active {
+            background: rgba(168,85,247,0.2);
+            color: var(--purple-glow);
+        }
+        .nav-item:active { transform: scale(0.95); }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(10,10,20,0.95);
+            border: 1px solid var(--teal-mystic);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 150;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="dashboard-wrapper">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-title"><i class="fas fa-magic"></i> Create SC</div>
+            <div class="header-actions">
+                <div class="icon-btn" id="menuToggleBtn"><i class="fas fa-bars-staggered"></i></div>
+            </div>
+        </div>
+
+        <div class="main-scroll">
+            <div class="info-card">
+                <div class="info-row"><span>Role Anda</span><span class="limit-badge" id="roleDisplay">-</span></div>
+                <div class="info-row"><span>Sisa Limit Create</span><span class="limit-badge" id="limitDisplay">-</span></div>
+                <div class="info-row"><span>Max Fitur per Create</span><span class="limit-badge" id="maxFiturDisplay">-</span></div>
+                <div class="info-row"><span>Next Reset</span><span class="limit-badge" id="resetDisplay">-</span></div>
+            </div>
+
+            <div class="input-group">
+                <label><i class="fas fa-robot"></i> Nama Bot</label>
+                <input type="text" id="botName" placeholder="Contoh: MyDreamBot">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-key"></i> Bot Token</label>
+                <input type="text" id="botToken" placeholder="Masukkan token bot">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-user"></i> Owner ID</label>
+                <input type="text" id="ownerId" placeholder="ID Telegram Owner">
+            </div>
+
+            <div class="section-header"><h4><i class="fas fa-cubes"></i> Pilih Fitur</h4><span style="font-size:0.6rem;">geser →</span></div>
+            <div class="features-container">
+                <div class="features-wrapper" id="featuresList"></div>
+            </div>
+
+            <div class="section-header"><h4><i class="fas fa-check-circle"></i> Fitur Terpilih</h4></div>
+            <div class="selected-features" id="selectedFeaturesList"></div>
+
+            <button class="btn" id="createBtn"><i class="fas fa-download"></i> Create SC & Download</button>
+            <button class="btn btn-secondary" id="tutorialBtn"><i class="fas fa-graduation-cap"></i> Tutorial Create SC</button>
+            <button class="btn btn-secondary" id="checkLimitBtn"><i class="fas fa-chart-line"></i> Check Limit</button>
+        </div>
+
+        <div class="bottom-nav">
+            <button class="nav-item" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item" data-page="store"><i class="fas fa-store"></i><span>Store</span></button>
+            <button class="nav-item active" data-page="create"><i class="fas fa-magic"></i><span>Create</span></button>
+            <button class="nav-item" data-page="other"><i class="fas fa-clock"></i><span>Other</span></button>
+            <button class="nav-item" data-page="music"><i class="fas fa-music"></i><span>Music</span></button>
+            <button class="nav-item" data-page="tiktok"><i class="fab fa-tiktok"></i><span>TikTok</span></button>
+            <button class="nav-item" data-page="suntik"><i class="fas fa-syringe"></i><span>Suntik</span></button>
+            <button class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+        </div>
+    </div>
+
+    <div class="toast" id="toastMsg">Pesan</div>
+
+    <script>
+        const session = JSON.parse(localStorage.getItem('flowdream_session'));
+        if(!session) window.location.href = 'index.html';
+
+        let db = JSON.parse(localStorage.getItem('flowdream_db'));
+        let user = db.users.find(u => u.id === session.userId);
+
+        // Role limits
+        const roleLimits = {
+            member: { maxFitur: 3, createCooldown: 4, createLimit: 1, fiturType: ['biasa'] },
+            premium: { maxFitur: 3, createCooldown: 4, createLimit: 1, fiturType: ['biasa'] },
+            resseller: { maxFitur: 5, createCooldown: 3, createLimit: 3, fiturType: ['biasa'] },
+            partner: { maxFitur: 8, createCooldown: 2, createLimit: 5, fiturType: ['biasa', 'vip'] },
+            tk: { maxFitur: 12, createCooldown: 2, createLimit: 8, fiturType: ['biasa', 'vip'] },
+            mods: { maxFitur: 17, createCooldown: 2, createLimit: 10, fiturType: ['biasa', 'vip'] },
+            owner: { maxFitur: 25, createCooldown: 1, createLimit: 100, fiturType: ['biasa', 'vip'] },
+            developer: { maxFitur: 30, createCooldown: 1, createLimit: 100, fiturType: ['biasa', 'vip'] }
+        };
+
+        const features = [
+            { id: 1, name: "Auto Like", type: "biasa", desc: "Auto like otomatis ke target" },
+            { id: 2, name: "Auto Comment", type: "biasa", desc: "Auto komentar dengan kata kunci" },
+            { id: 3, name: "Auto Follow", type: "biasa", desc: "Auto follow akun target" },
+            { id: 4, name: "Auto Unfollow", type: "biasa", desc: "Auto unfollow non-followback" },
+            { id: 5, name: "Mass DM", type: "vip", desc: "Kirim pesan massal ke banyak akun" },
+            { id: 6, name: "Story Viewer", type: "vip", desc: "View story otomatis tanpa batas" },
+            { id: 7, name: "Comment Tracker", type: "vip", desc: "Track komentar di postingan" }
+        ];
+
+        let selectedFeatures = [];
+        let userCreateData = JSON.parse(localStorage.getItem(`create_${user.username}`)) || { count: 0, lastCreate: 0, history: [] };
+
+        function getRoleLimit() { return roleLimits[user.role] || roleLimits.member; }
+        function canCreate() {
+            let limit = getRoleLimit();
+            let now = Date.now();
+            let daysSinceLast = (now - (userCreateData.lastCreate || 0)) / (1000 * 60 * 60 * 24);
+            if(userCreateData.count >= limit.createLimit && daysSinceLast < limit.createCooldown) {
+                return { can: false, reason: `Limit create habis. Tunggu ${Math.ceil(limit.createCooldown - daysSinceLast)} hari lagi` };
+            }
+            return { can: true };
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function updateUI() {
+            let limit = getRoleLimit();
+            document.getElementById('roleDisplay').innerHTML = user.role.toUpperCase();
+            document.getElementById('limitDisplay').innerHTML = `${userCreateData.count}/${limit.createLimit}`;
+            document.getElementById('maxFiturDisplay').innerHTML = limit.maxFitur;
+            let now = Date.now();
+            let nextReset = userCreateData.lastCreate + (limit.createCooldown * 24 * 60 * 60 * 1000);
+            let daysLeft = Math.max(0, Math.ceil((nextReset - now) / (1000 * 60 * 60 * 24)));
+            document.getElementById('resetDisplay').innerHTML = daysLeft > 0 ? `${daysLeft} hari lagi` : 'Siap create';
+        }
+
+        function renderFeatures() {
+            let limit = getRoleLimit();
+            let availableFeatures = features.filter(f => limit.fiturType.includes(f.type));
+            document.getElementById('featuresList').innerHTML = availableFeatures.map(f => `
+                <div class="feature-card ${selectedFeatures.includes(f.id) ? 'selected' : ''}" onclick="toggleFeature(${f.id})">
+                    <div class="feature-name">${f.name}</div>
+                    <span class="feature-type ${f.type}">${f.type.toUpperCase()}</span>
+                    <div class="feature-desc">${f.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFeature(featureId) {
+            let limit = getRoleLimit();
+            let idx = selectedFeatures.indexOf(featureId);
+            if(idx === -1) {
+                if(selectedFeatures.length >= limit.maxFitur) {
+                    showToast(`Maksimal ${limit.maxFitur} fitur!`);
+                    return;
+                }
+                selectedFeatures.push(featureId);
+            } else {
+                selectedFeatures.splice(idx, 1);
+            }
+            updateSelectedUI();
+            renderFeatures();
+        }
+
+        function updateSelectedUI() {
+            let selected = features.filter(f => selectedFeatures.includes(f.id));
+            document.getElementById('selectedFeaturesList').innerHTML = selected.map(f => `
+                <div class="selected-tag">
+                    <i class="fas fa-check-circle"></i> ${f.name}
+                    <i class="fas fa-times remove-feature" onclick="event.stopPropagation(); toggleFeature(${f.id})"></i>
+                </div>
+            `).join('');
+            if(selected.length === 0) {
+                document.getElementById('selectedFeaturesList').innerHTML = '<span style="font-size:0.7rem; color:var(--text-dim);">Belum ada fitur dipilih</span>';
+            }
+        }
+
+        function createScript() {
+            let can = canCreate();
+            if(!can.can) { showToast(can.reason); return; }
+            let botName = document.getElementById('botName').value.trim();
+            let botToken = document.getElementById('botToken').value.trim();
+            let ownerId = document.getElementById('ownerId').value.trim();
+            if(!botName || !botToken || !ownerId) { showToast('Isi semua data!'); return; }
+            if(selectedFeatures.length === 0) { showToast('Pilih minimal 1 fitur!'); return; }
+
+            let selected = features.filter(f => selectedFeatures.includes(f.id));
+            let scriptContent = `// Flow Dream X - Bot Script\n// Bot: ${botName}\n// Owner: ${ownerId}\n// Features: ${selected.map(f => f.name).join(', ')}\n\nconsole.log('Bot ${botName} siap digunakan!');`;
+            
+            const blob = new Blob([scriptContent], { type: 'application/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${botName.toLowerCase().replace(/ /g, '_')}_bot.js`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            userCreateData.count++;
+            userCreateData.lastCreate = Date.now();
+            localStorage.setItem(`create_${user.username}`, JSON.stringify(userCreateData));
+            
+            if(db.inbox) {
+                db.inbox.push({
+                    id: 'msg_' + Date.now(),
+                    to_role: 'all',
+                    from: user.username,
+                    message: `📦 ${user.username} (${user.role}) membuat script baru!\nBot: ${botName}\nFitur: ${selected.length} aktif`,
+                    created_at: new Date().toLocaleString(),
+                    expired_at: new Date(Date.now() + 48*60*60*1000).toLocaleString(),
+                    read_by: []
+                });
+                localStorage.setItem('flowdream_db', JSON.stringify(db));
+            }
+            showToast('Script berhasil dibuat!');
+            updateUI();
+        }
+
+        document.getElementById('createBtn').onclick = createScript;
+        document.getElementById('tutorialBtn').onclick = () => window.open('tutorialsc.mp4', '_blank');
+        document.getElementById('checkLimitBtn').onclick = () => {
+            let limit = getRoleLimit();
+            let can = canCreate();
+            showToast(`Role: ${user.role} | Max Fitur: ${limit.maxFitur} | Sisa Create: ${limit.createLimit - userCreateData.count}`);
+        };
+
+        function goBack() { window.location.href = 'home.html'; }
+
+        const pageMap = {
+            'home': 'home.html', 'store': 'store.html', 'create': 'create.html',
+            'music': 'music.html', 'tiktok': 'tiktok.html', 'suntik': 'suntik.html', 'profile': 'profile.html'
+        };
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.getAttribute('data-page');
+                if(page === 'other') { showToast('Coming Soon!'); return; }
+                if(pageMap[page]) window.location.href = pageMap[page];
+            });
+        });
+
+        updateUI();
+        renderFeatures();
+        updateSelectedUI();
+
+        // Sidebar injection
+        const sidebarHTML = `<div class="sidebar-overlay" id="sidebarOverlay"></div><aside class="sidebar" id="sidebarPanel"><div class="sidebar-banner"><video autoplay muted loop playsinline><source src="banner.mp4" type="video/mp4"></video><div class="sidebar-logo"><i class="fas fa-dragon"></i></div></div><div class="sidebar-menu"><div class="sidebar-item" data-side="reseller"><i class="fas fa-chart-line"></i> Reseller Page</div><div class="sidebar-item" data-side="dev"><i class="fas fa-code"></i> Dev Page</div></div><div style="padding: 16px; font-size:0.6rem; color:var(--text-dim); border-top:1px solid var(--glass-stroke);"><i class="fas fa-crown"></i> Flow Dream X v3.0</div></aside><style>.sidebar-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:90;opacity:0;visibility:hidden;transition:.3s}.sidebar{position:fixed;top:0;left:-280px;width:280px;height:100%;background:linear-gradient(135deg,var(--bg-surface),#0a0a14);border-right:2px solid var(--purple-primary);z-index:100;transition:left .35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column}.sidebar.open{left:0}.sidebar-banner{height:140px;position:relative;overflow:hidden}.sidebar-banner video{width:100%;height:100%;object-fit:cover}.sidebar-logo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:linear-gradient(135deg,#a855f7,#2dd4bf);border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid white}.sidebar-logo i{font-size:1.8rem;color:white}.sidebar-menu{padding:20px;flex:1}.sidebar-item{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:20px;color:var(--text-secondary);text-decoration:none;margin:8px 0;transition:.3s;cursor:pointer}.sidebar-item:hover{background:rgba(168,85,247,0.2);color:var(--purple-glow);transform:translateX(6px)}.sidebar-item i{width:24px}</style>`;
+        document.body.insertAdjacentHTML('beforeend', sidebarHTML);
+
+        const sidebarPanel = document.getElementById('sidebarPanel');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+
+        function closeSidebar() {
+            if(sidebarPanel) sidebarPanel.classList.remove('open');
+            if(sidebarOverlay) { sidebarOverlay.style.opacity = '0'; sidebarOverlay.style.visibility = 'hidden'; }
+        }
+        function openSidebar() {
+            if(sidebarPanel) sidebarPanel.classList.add('open');
+            if(sidebarOverlay) { sidebarOverlay.style.opacity = '1'; sidebarOverlay.style.visibility = 'visible'; }
+        }
+        if(menuToggleBtn) menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); openSidebar(); });
+        if(sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const side = item.getAttribute('data-side');
+                if(side === 'reseller') window.location.href = 'ress.html';
+                if(side === 'dev') window.location.href = 'dev.html';
+                closeSidebar();
+            });
+        });
+        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeSidebar(); });
+    </script>
+</body>
+</html>

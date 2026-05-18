@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Flow Dream X • Developer Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-deep: #0a0a14;
+            --bg-surface: #0d0e18;
+            --bg-elevated: #13152a;
+            --glass-bg: rgba(18, 20, 35, 0.75);
+            --glass-stroke: rgba(168, 85, 247, 0.3);
+            --purple-primary: #a855f7;
+            --purple-glow: #c084fc;
+            --teal-mystic: #2dd4bf;
+            --text-light: #f3f0ff;
+            --text-secondary: #c4c1d6;
+            --text-dim: #8b86a3;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0a0a14 0%, #130b1e 50%, #0a0a14 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .orb-1 { width: 300px; height: 300px; background: #a855f7; top: -100px; left: -100px; animation: floatOrb 20s infinite; }
+        .orb-2 { width: 400px; height: 400px; background: #2dd4bf; bottom: -150px; right: -150px; animation: floatOrb 25s infinite reverse; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        .dashboard-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            background: var(--bg-surface);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-stroke);
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .dashboard-wrapper {
+                height: 90vh;
+                border-radius: 48px;
+                margin: 20px auto;
+            }
+        }
+
+        .main-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .main-scroll::-webkit-scrollbar-track {
+            background: rgba(168,85,247,0.1);
+            border-radius: 10px;
+        }
+        .main-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #a855f7, #2dd4bf);
+            border-radius: 10px;
+        }
+
+        .header {
+            padding: 16px 20px;
+            background: rgba(13, 14, 24, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-stroke);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(168,85,247,0.2);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            color: var(--purple-glow);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .back-btn:active { transform: scale(0.95); }
+
+        .header-title {
+            flex: 1;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-elevated);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--glass-stroke);
+            color: var(--purple-glow);
+            font-size: 1.1rem;
+            cursor: pointer;
+            position: relative;
+        }
+        .icon-btn:active { transform: scale(0.94); }
+
+        .main-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px 90px;
+        }
+
+        /* Card Styles */
+        .glass-card {
+            background: rgba(30, 30, 45, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid var(--glass-stroke);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--purple-glow);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--purple-glow);
+            margin-bottom: 6px;
+        }
+        .input-group input, 
+        .input-group select, 
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-stroke);
+            border-radius: 20px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+        .input-group input:focus, 
+        .input-group select:focus, 
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--purple-primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--purple-primary), var(--teal-mystic));
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.3s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-danger {
+            background: rgba(239,68,68,0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+        }
+        .btn-secondary {
+            background: rgba(168,85,247,0.2);
+            border: 1px solid var(--purple-primary);
+        }
+
+        /* User Card */
+        .user-card {
+            background: rgba(30, 30, 45, 0.4);
+            border-radius: 20px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--glass-stroke);
+            transition: all 0.3s;
+        }
+        .user-card:hover {
+            border-color: var(--purple-primary);
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .user-role {
+            font-size: 0.65rem;
+            color: var(--teal-mystic);
+        }
+        .user-expired {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+        }
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .user-actions button {
+            background: rgba(168,85,247,0.2);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: var(--purple-glow);
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .user-actions button:active { transform: scale(0.95); }
+        .user-actions button.delete { color: #f87171; }
+        .user-actions button.promote { color: #fbbf24; }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            flex-shrink: 0;
+            background: rgba(13, 14, 24, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-stroke);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 12px;
+            z-index: 30;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            border-radius: 30px;
+            transition: all 0.2s;
+            cursor: pointer;
+            color: var(--text-dim);
+            background: transparent;
+            border: none;
+            font-family: inherit;
+        }
+        .nav-item i { font-size: 1.1rem; }
+        .nav-item span { font-size: 0.55rem; font-weight: 500; }
+        .nav-item.active {
+            background: rgba(168,85,247,0.2);
+            color: var(--purple-glow);
+        }
+        .nav-item:active { transform: scale(0.95); }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(10,10,20,0.95);
+            border: 1px solid var(--teal-mystic);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 150;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+        .badge-dev {
+            background: rgba(168,85,247,0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            color: var(--purple-glow);
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="dashboard-wrapper">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+            <div class="header-title"><i class="fas fa-code"></i> Dev Panel</div>
+            <div class="header-actions">
+                <div class="icon-btn" id="menuToggleBtn"><i class="fas fa-bars-staggered"></i></div>
+            </div>
+        </div>
+
+        <div class="main-scroll">
+            <!-- Broadcast Message -->
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-paper-plane"></i> Broadcast Message
+                    <span class="badge-dev">To All Users</span>
+                </div>
+                <div class="input-group">
+                    <label>Pesan</label>
+                    <textarea id="broadcastMsg" rows="3" placeholder="Tulis pesan broadcast..."></textarea>
+                </div>
+                <button class="btn" id="broadcastBtn">
+                    <i class="fas fa-paper-plane"></i> Kirim ke Semua User
+                </button>
+            </div>
+
+            <!-- Add Feature (Case) -->
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-cube"></i> Add New Feature
+                    <span class="badge-dev">Case System</span>
+                </div>
+                <div class="input-group">
+                    <label>Nama Fitur</label>
+                    <input type="text" id="featureName" placeholder="Contoh: Auto Comment">
+                </div>
+                <div class="input-group">
+                    <label>Jenis Fitur</label>
+                    <select id="featureType">
+                        <option value="biasa">Biasa (Untuk semua user)</option>
+                        <option value="vip">VIP (Khusus premium)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Deskripsi</label>
+                    <input type="text" id="featureDesc" placeholder="Deskripsi singkat fitur">
+                </div>
+                <button class="btn" id="addFeatureBtn">
+                    <i class="fas fa-plus"></i> Tambah Fitur
+                </button>
+            </div>
+
+            <!-- System Tools -->
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-tools"></i> System Tools
+                </div>
+                <button class="btn btn-secondary" id="backupBtn">
+                    <i class="fas fa-database"></i> Backup Database
+                </button>
+                <button class="btn btn-secondary" id="clearLogsBtn" style="margin-top: 10px;">
+                    <i class="fas fa-trash-alt"></i> Clear Activity Logs
+                </button>
+            </div>
+
+            <!-- All Users Management -->
+            <div class="glass-card">
+                <div class="section-title">
+                    <i class="fas fa-users"></i> User Management
+                    <span class="badge-dev">Total: <span id="totalUsers">0</span></span>
+                </div>
+                <div id="allUserList"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <button class="nav-item" data-page="home"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item" data-page="store"><i class="fas fa-store"></i><span>Store</span></button>
+            <button class="nav-item" data-page="create"><i class="fas fa-magic"></i><span>Create</span></button>
+            <button class="nav-item" data-page="other"><i class="fas fa-clock"></i><span>Other</span></button>
+            <button class="nav-item" data-page="music"><i class="fas fa-music"></i><span>Music</span></button>
+            <button class="nav-item" data-page="tiktok"><i class="fab fa-tiktok"></i><span>TikTok</span></button>
+            <button class="nav-item" data-page="suntik"><i class="fas fa-syringe"></i><span>Suntik</span></button>
+            <button class="nav-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></button>
+        </div>
+    </div>
+
+    <div class="toast" id="toastMsg">Pesan</div>
+
+    <script>
+        // Check session
+        const session = JSON.parse(localStorage.getItem('flowdream_session'));
+        if(!session) {
+            window.location.href = 'index.html';
+        }
+
+        // Load database
+        let db = JSON.parse(localStorage.getItem('flowdream_db'));
+        let user = db.users.find(u => u.id === session.userId);
+
+        // Check if user is developer or owner
+        if(user.role !== 'developer' && user.role !== 'owner') {
+            showToast('Akses ditolak! Halaman ini hanya untuk Developer/Owner.');
+            setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 2000);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function saveDB() {
+            localStorage.setItem('flowdream_db', JSON.stringify(db));
+        }
+
+        // Broadcast message
+        document.getElementById('broadcastBtn').addEventListener('click', () => {
+            let msg = document.getElementById('broadcastMsg').value.trim();
+            if(!msg) {
+                showToast('Pesan tidak boleh kosong!');
+                return;
+            }
+
+            if(!db.inbox) db.inbox = [];
+            
+            db.inbox.push({
+                id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                to_role: 'all',
+                to_username: null,
+                from: 'Developer',
+                message: msg,
+                created_at: new Date().toLocaleString(),
+                expired_at: new Date(Date.now() + 48*60*60*1000).toLocaleString(),
+                read_by: []
+            });
+
+            saveDB();
+            showToast('Broadcast terkirim ke semua user!');
+            document.getElementById('broadcastMsg').value = '';
+
+            // Try to send push notification
+            if(Notification.permission === 'granted') {
+                new Notification('Flow Dream X - Broadcast', {
+                    body: msg.length > 50 ? msg.substring(0, 50) + '...' : msg,
+                    icon: 'logo.png'
+                });
+            }
+        });
+
+        // Add feature
+        document.getElementById('addFeatureBtn').addEventListener('click', () => {
+            let name = document.getElementById('featureName').value.trim();
+            let type = document.getElementById('featureType').value;
+            let desc = document.getElementById('featureDesc').value.trim();
+
+            if(!name) {
+                showToast('Nama fitur wajib diisi!');
+                return;
+            }
+
+            if(!db.features) db.features = [];
+            
+            let newId = db.features.length + 1;
+            db.features.push({
+                id: newId,
+                name: name,
+                type: type,
+                desc: desc || 'Fitur baru'
+            });
+
+            saveDB();
+            showToast(`Fitur "${name}" berhasil ditambahkan!`);
+            
+            document.getElementById('featureName').value = '';
+            document.getElementById('featureDesc').value = '';
+
+            // Add to create.html features list
+            renderAllUsers();
+        });
+
+        // Backup database
+        document.getElementById('backupBtn').addEventListener('click', () => {
+            const backup = {
+                timestamp: new Date().toISOString(),
+                data: db
+            };
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `flowdream_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('Backup database berhasil!');
+        });
+
+        // Clear logs
+        document.getElementById('clearLogsBtn').addEventListener('click', () => {
+            if(confirm('Hapus semua activity logs? Tindakan ini tidak bisa dibatalkan.')) {
+                db.activity_logs = [];
+                saveDB();
+                showToast('Activity logs telah dihapus!');
+            }
+        });
+
+        // Render all users
+        function renderAllUsers() {
+            const allUsers = db.users.filter(u => u.username !== user.username);
+            const container = document.getElementById('allUserList');
+            document.getElementById('totalUsers').innerText = allUsers.length;
+            
+            if(allUsers.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:var(--text-dim); padding:20px;">Tidak ada user lain</div>';
+                return;
+            }
+            
+            container.innerHTML = allUsers.map(u => `
+                <div class="user-card">
+                    <div class="user-info">
+                        <div class="user-name">${escapeHtml(u.username)}</div>
+                        <div class="user-role">
+                            <i class="fas fa-tag"></i> ${u.role}
+                            ${u.expired_at ? ` | Expired: ${new Date(u.expired_at).toLocaleDateString()}` : ' | Permanen'}
+                        </div>
+                        <div class="user-expired">Created: ${new Date(u.created_at).toLocaleDateString()}</div>
+                    </div>
+                    <div class="user-actions">
+                        <button onclick="deleteUser('${u.username}')" class="delete" title="Hapus User">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button onclick="promoteUser('${u.username}')" class="promote" title="Promote Role">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <button onclick="extendUser('${u.username}')" title="Extend Masa Aktif">
+                            <i class="fas fa-calendar-plus"></i>
+                        </button>
+                        <button onclick="resetPassword('${u.username}')" title="Reset Password">
+                            <i class="fas fa-key"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function deleteUser(username) {
+            if(confirm(`Hapus user ${username} secara permanen?`)) {
+                db.users = db.users.filter(u => u.username !== username);
+                saveDB();
+                renderAllUsers();
+                showToast(`User ${username} telah dihapus`);
+                
+                // Send notification
+                if(!db.inbox) db.inbox = [];
+                db.inbox.push({
+                    id: 'msg_' + Date.now(),
+                    to_role: 'all',
+                    from: 'System',
+                    message: `🗑️ User ${username} telah dihapus oleh ${user.username}`,
+                    created_at: new Date().toLocaleString(),
+                    expired_at: new Date(Date.now() + 48*60*60*1000).toLocaleString(),
+                    read_by: []
+                });
+                saveDB();
+            }
+        }
+
+        function promoteUser(username) {
+            const targetUser = db.users.find(u => u.username === username);
+            if(!targetUser) return;
+            
+            const roles = ['member', 'premium', 'resseller', 'partner', 'tk', 'mods'];
+            const currentIndex = roles.indexOf(targetUser.role);
+            const nextRole = roles[currentIndex + 1];
+            
+            if(nextRole) {
+                targetUser.role = nextRole;
+                saveDB();
+                renderAllUsers();
+                showToast(`${username} dipromote menjadi ${nextRole}`);
+            } else {
+                showToast(`${username} sudah di role tertinggi`);
+            }
+        }
+
+        function extendUser(username) {
+            const days = prompt('Tambahkan masa aktif (hari):', '30');
+            if(days && !isNaN(days) && days > 0) {
+                const targetUser = db.users.find(u => u.username === username);
+                if(targetUser) {
+                    if(targetUser.expired_at) {
+                        const currentExpiry = new Date(targetUser.expired_at);
+                        const newExpiry = new Date(currentExpiry.getTime() + days * 24 * 60 * 60 * 1000);
+                        targetUser.expired_at = newExpiry.toISOString();
+                    } else {
+                        targetUser.expired_at = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+                    }
+                    saveDB();
+                    renderAllUsers();
+                    showToast(`Masa aktif ${username} ditambah ${days} hari`);
+                }
+            }
+        }
+
+        function resetPassword(username) {
+            const newPass = prompt('Password baru untuk ' + username + ':', 'password123');
+            if(newPass && newPass.length >= 4) {
+                const targetUser = db.users.find(u => u.username === username);
+                if(targetUser) {
+                    targetUser.password = newPass;
+                    saveDB();
+                    showToast(`Password ${username} telah direset!`);
+                }
+            } else {
+                showToast('Password minimal 4 karakter!');
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'home.html';
+        }
+
+        // Navigation
+        const pageMap = {
+            'home': 'home.html', 'store': 'store.html', 'create': 'create.html',
+            'music': 'music.html', 'tiktok': 'tiktok.html', 'suntik': 'suntik.html', 'profile': 'profile.html'
+        };
+
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.getAttribute('data-page');
+                if(page === 'other') { showToast('Coming Soon!'); return; }
+                if(pageMap[page]) window.location.href = pageMap[page];
+            });
+        });
+
+        // Initial render
+        renderAllUsers();
+
+        // Sidebar injection (sama seperti halaman lain)
+        const sidebarHTML = `
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+            <aside class="sidebar" id="sidebarPanel">
+                <div class="sidebar-banner">
+                    <video autoplay muted loop playsinline><source src="banner.mp4" type="video/mp4"></video>
+                    <div class="sidebar-logo"><i class="fas fa-dragon"></i></div>
+                </div>
+                <div class="sidebar-menu">
+                    <div class="sidebar-item" data-side="reseller"><i class="fas fa-chart-line"></i> Reseller Page</div>
+                    <div class="sidebar-item" data-side="dev"><i class="fas fa-code"></i> Dev Page</div>
+                </div>
+                <div style="padding: 16px; font-size:0.6rem; color:var(--text-dim); border-top:1px solid var(--glass-stroke);">
+                    <i class="fas fa-crown"></i> Flow Dream X v3.0
+                </div>
+            </aside>
+            <style>
+                .sidebar-overlay {
+                    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+                    z-index: 90; opacity: 0; visibility: hidden; transition: 0.3s;
+                }
+                .sidebar {
+                    position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+                    background: linear-gradient(135deg, var(--bg-surface), #0a0a14);
+                    border-right: 2px solid var(--purple-primary);
+                    z-index: 100; transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                    display: flex; flex-direction: column;
+                }
+                .sidebar.open { left: 0; }
+                .sidebar-banner { height: 140px; position: relative; overflow: hidden; }
+                .sidebar-banner video { width: 100%; height: 100%; object-fit: cover; }
+                .sidebar-logo {
+                    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                    width: 60px; height: 60px; background: linear-gradient(135deg, #a855f7, #2dd4bf);
+                    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                    border: 2px solid white;
+                }
+                .sidebar-logo i { font-size: 1.8rem; color: white; }
+                .sidebar-menu { padding: 20px; flex: 1; }
+                .sidebar-item {
+                    display: flex; align-items: center; gap: 14px; padding: 12px 16px;
+                    border-radius: 20px; color: var(--text-secondary); text-decoration: none;
+                    margin: 8px 0; transition: all 0.3s; cursor: pointer;
+                }
+                .sidebar-item:hover { background: rgba(168,85,247,0.2); color: var(--purple-glow); transform: translateX(6px); }
+                .sidebar-item i { width: 24px; }
+            </style>
+        `;
+        document.body.insertAdjacentHTML('beforeend', sidebarHTML);
+
+        const sidebarPanel = document.getElementById('sidebarPanel');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+
+        function closeSidebar() {
+            if(sidebarPanel) sidebarPanel.classList.remove('open');
+            if(sidebarOverlay) { sidebarOverlay.style.opacity = '0'; sidebarOverlay.style.visibility = 'hidden'; }
+        }
+        
+        function openSidebar() {
+            if(sidebarPanel) sidebarPanel.classList.add('open');
+            if(sidebarOverlay) { sidebarOverlay.style.opacity = '1'; sidebarOverlay.style.visibility = 'visible'; }
+        }
+        
+        if(menuToggleBtn) menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); openSidebar(); });
+        if(sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+        
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const side = item.getAttribute('data-side');
+                if(side === 'reseller') window.location.href = 'ress.html';
+                if(side === 'dev') window.location.href = 'dev.html';
+                closeSidebar();
+            });
+        });
+        
+        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeSidebar(); });
+
+        // Request notification permission
+        if(Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>
